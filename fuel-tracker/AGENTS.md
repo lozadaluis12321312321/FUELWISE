@@ -1,0 +1,16 @@
+# FuelWise project
+
+- Shared UI: `index.html`, `styles.css`, `app.js`. These run directly from a static server without npm dependencies.
+- Native apps use Capacitor 8.4.3. `native-entry.js` supplies Preferences storage, Filesystem/Share backup export, and Android back-button handling. Never use a remote `server.url` for production: native assets must remain bundled for offline launch.
+- Node.js 22+ is required for builds. This Windows workspace has a portable, checksum-verified Node 22.23.3 under `.tools/node-v22.23.3-win-x64/`. In PowerShell from this directory: `$env:PATH = "$PWD\.tools\node-v22.23.3-win-x64;$env:PATH"`. This changes only the current shell.
+- Install from the lockfile with `npm ci`. Build with `npm run build`. `dist/` is generated; edit source files instead.
+- Preview: `npm run dev` serves the source app at `http://127.0.0.1:5501` and the built bundle at `/mobile/`. It binds to loopback only.
+- Tests: install engines once with `npx playwright install chromium webkit`, then `npm test`. Tests cover Android-sized Chromium and iPhone-sized WebKit. Native bridge behavior is mocked; this does not validate actual plugins or native binaries. WebKit offline-reload testing is skipped because of Playwright's service-worker/offline-navigation limitation. Verify real iOS offline launch manually.
+- Native sync: `npm run mobile:sync`. The `capacitor:sync:after` script normalizes generated Swift package paths so Windows-generated iOS projects can be used on macOS.
+- Android: `npm run android` builds/syncs assets and opens Android Studio. Generated project uses compile/target SDK 36 and minimum SDK 24. Android Studio 2025.2.1+ and its bundled JDK/SDK are required. From `android/`, `gradlew.bat assembleDebug` builds the debug APK when those tools are installed.
+- iOS: on a Mac with Xcode 26+, run `npm ci`, then `npm run ios`. Uses Swift Package Manager. The app privacy manifest is included in the Xcode resources for Preferences and Filesystem required-reason APIs.
+- Native compilation was blocked in this Windows environment by missing Java/Android SDK and macOS/Xcode. Device tests, release signing, store metadata, and ownership/availability of the sample application ID `com.fuelwise.tracker` must be checked before distribution.
+- UI is minimalist and monochrome. Theme preference uses the separate `fuelwise.theme.v1` key in native Preferences or browser localStorage; default follows the system until manually chosen. Keep theme handling independent of fuel data backups.
+- Branding source is `logo.svg`. Run `npm run icons` to regenerate web PNGs and Android/iOS launcher and launch-screen images using the existing Playwright Chromium installation, then `npm run mobile:sync`. Native status-bar contrast is updated with Capacitor's built-in SystemBars API.
+- Data is local only; no station feed, GPS routing, or car sensor connection exists. Stations/prices/distances and remaining fuel are manual inputs; initial stations are demos. Cost recommendations are deterministic estimates, not a trained AI model.
+- Export/import transfers website records to native apps; storage is not automatically shared between browser and app. Uninstalling removes native preferences. Platform backups may apply on iOS.

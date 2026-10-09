@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.tools/
+test-results/
+playwright-report/
+*.jks
+*.keystore
+*.p12
+*.mobileprovision

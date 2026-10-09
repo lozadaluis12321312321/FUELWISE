@@ -1,0 +1,16 @@
+{
+  "appId": "com.fuelwise.tracker",
+  "appName": "FuelWise",
+  "webDir": "dist",
+  "backgroundColor": "#f7f7f7",
+  "ios": {
+    "contentInset": "never"
+  },
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "native",
+      "initialViewportFitValueHint": "cover",
+      "style": "DEFAULT"
+    }
+  }
+}

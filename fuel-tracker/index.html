@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#f7f7f7" />
+  <meta name="color-scheme" content="light dark" />
+  <script>
+    (() => {
+      let saved;
+      try { saved = localStorage.getItem("fuelwise.theme.v1"); } catch {}
+      const theme = ["light", "dark"].includes(saved) ? saved : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.dataset.theme = theme;
+      document.querySelector('meta[name="theme-color"]').content = theme === "dark" ? "#111111" : "#f7f7f7";
+    })();
+  </script>
+  <title>FuelWise - Offline Fuel Advisor</title>
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img class="logo" src="logo.svg" width="42" height="42" alt="FuelWise droplet and road logo" />
+      <div><h1>FuelWise</h1><p><span id="offlineBadge" class="badge">On-device advisor</span></p></div>
+    </div>
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode" disabled>
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14a8.5 8.5 0 0 1-10-10A8.5 8.5 0 1 0 20 14Z" /></svg>
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" /></svg>
+    </button>
+  </header>
+  <p id="themeStatus" class="sr-only" role="status" aria-live="polite"></p>
+
+  <p id="appStatus" class="app-status" role="status" aria-live="polite">Loading your fuel profile…</p>
+  <div id="lowFuelBanner" class="banner hidden"></div>
+
+  <main id="mainContent" tabindex="-1">
+    <section id="overviewSummary" class="overview-summary" aria-label="Fuel overview">
+      <div><p class="eyebrow">Fuel overview</p><h2>Your next stop.</h2>
+      <p class="summary-copy">The right station. Less spent getting there.</p></div>
+      <div class="range-summary"><span>Estimated remaining range</span><strong id="summaryRange">—</strong><span id="summaryFuel">Based on your vehicle profile</span>
+      <button class="btn ghost" type="button" data-view="vehicle">Update fuel</button></div>
+    </section>
+    <div class="grid">
+      <section class="card hidden" id="vehicleCard" data-screen="vehicle">
+        <h2>My Vehicle</h2>
+        <p class="section-intro">Update your fuel level manually. FuelWise does not connect to your car's fuel sensor.</p>
+        <div class="fuel-gauge">
+          <div class="gauge-track"><div id="gaugeFill" class="gauge-fill"></div></div>
+          <div class="gauge-labels"><span>E</span><span id="gaugeText">-</span><span>F</span></div>
+        </div>
+        <form id="vehicleForm" class="form-grid">
+          <label>Tank capacity (L)<input type="number" name="tank" min="1" step="0.1" inputmode="decimal" required /></label>
+          <label>Fuel left (L)<input type="number" name="fuel" min="0" step="0.1" inputmode="decimal" required /></label>
+          <label>Efficiency (km/L)<input type="number" name="eff" min="0.1" step="any" inputmode="decimal" required /></label>
+          <label>Currency<input type="text" name="currency" maxlength="3" required /></label>
+          <label>Avg. speed (km/h)<input type="number" name="speed" min="1" step="1" inputmode="numeric" required /></label>
+          <label>Value of my time (/hour)<input type="number" name="timeValue" min="0" step="1" inputmode="decimal" required /></label>
+          <label>Refuel mode<select name="fillMode"><option value="full">Fill up the tank</option><option value="fixed">Fixed amount</option></select></label>
+          <label id="fillAmountLabel">Amount to buy (L)<input type="number" name="fillAmount" min="1" step="0.1" inputmode="decimal" required /></label>
+          <label>Safety reserve (%)<input type="number" name="reserve" min="0" max="50" step="1" inputmode="numeric" required /></label>
+          <label class="check"><input type="checkbox" name="returnTrip" /> Count the drive back</label>
+        </form>
+        <p class="hint" id="rangeText"></p>
+      </section>
+
+      <section class="card ai-card" id="aiCard" data-screen="overview">
+        <p class="eyebrow">YOUR COST ADVISOR</p><h2>Recommended stop</h2>
+        <div id="recommendation" class="recommendation"></div>
+        <p class="hint">An on-device calculation, not a trained AI model. Estimates depend on your entered prices, road distances, and efficiency.</p>
+      </section>
+
+      <section class="card hidden" id="stationsCard" data-screen="stations">
+        <h2>Nearby Stations</h2>
+        <p class="section-intro">Starts with sample stations. Replace them with local prices and one-way road distances. No live prices or maps are downloaded.</p>
+        <form id="stationForm" class="station-form">
+          <input type="hidden" name="id" />
+          <label class="station-name">Station name<input type="text" name="name" placeholder="e.g. Corner Fuel" maxlength="100" required /></label>
+          <label>Price per liter<input type="number" name="price" placeholder="1.89" min="0.01" step="0.01" inputmode="decimal" required /></label>
+          <label>Distance in kilometers<input type="number" name="distance" placeholder="2.5" min="0" step="0.1" inputmode="decimal" required /></label>
+          <button type="submit" class="btn primary" id="stationSubmit">Add</button>
+          <button type="button" class="btn ghost hidden" id="stationCancel">Cancel</button>
+        </form>
+        <ul id="stationList" class="station-list"></ul>
+      </section>
+
+      <section class="card" id="compareCard" data-screen="overview">
+        <h2>True Cost Comparison</h2>
+        <p class="hint">Estimated fuel purchase plus the replacement cost of fuel used on the detour<span class="return-note">, including the return drive</span>, and optional time cost. A comparison estimate, not your exact pump bill.</p>
+        <div id="chart" class="chart"></div>
+        <div class="legend"><span><i class="sw fuel"></i>Fuel you need</span><span><i class="sw trip"></i>Detour fuel</span><span><i class="sw time"></i>Time cost</span></div>
+      </section>
+
+      <section class="card wide hidden" id="logCard" data-screen="activity">
+        <h2>Fill-up Log</h2>
+        <p class="section-intro">Track your fill-ups to calculate your real-world fuel efficiency.</p>
+        <form id="logForm" class="log-form">
+          <label>Fill-up date<input type="date" name="date" required /></label>
+          <label>Odometer in kilometers<input type="number" name="odometer" placeholder="12000" min="0" step="1" inputmode="numeric" required /></label>
+          <label>Liters purchased<input type="number" name="liters" placeholder="30" min="0.1" step="0.01" inputmode="decimal" required /></label>
+          <label>Fill-up price per liter<input type="number" name="price" placeholder="1.89" min="0.01" step="0.01" inputmode="decimal" required /></label>
+          <label>Fill-up station<select name="stationId"></select></label>
+          <label class="check"><input type="checkbox" name="full" checked /> Full tank</label>
+          <button type="submit" class="btn primary">Log</button>
+        </form>
+        <div id="learned" class="learned"></div>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Fill-up history, scroll horizontally for all columns">
+          <table class="log-table">
+            <thead><tr><th scope="col">Date</th><th scope="col">Odometer</th><th scope="col">Liters</th><th scope="col">Price</th><th scope="col">Total</th><th scope="col">Station</th><th scope="col">km/L</th><th scope="col">Actions</th></tr></thead>
+            <tbody id="logBody"></tbody>
+          </table>
+        </div>
+        <div class="actions">
+          <button class="btn ghost" id="exportBtn">Export data</button>
+          <label class="btn ghost file-btn">Import data<input type="file" id="importFile" accept=".json,application/json" /></label>
+          <button class="btn danger" id="resetBtn">Reset to demo data</button>
+        </div>
+        <p class="hint">Back up regularly. Uninstalling the app or clearing its data removes your saved records. Website data can be transferred here using Export and Import.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer>Offline calculations. No account or fuel-data server.</footer>
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <button type="button" data-view="overview" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3Z M9 20v-7h6v7" /></svg><span>Overview</span></button>
+    <button type="button" data-view="stations"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V3h10v18 M2 21h14 M4 10h10 M14 12h3v5a2 2 0 0 0 4 0V9l-4-4 M18 6v4h3" /></svg><span>Stations</span></button>
+    <button type="button" data-view="vehicle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 10 2-6h12l2 6 M3 10h18v8H3Z M5 18v3 M19 18v3 M6 14h2 M16 14h2" /></svg><span>Vehicle</span></button>
+    <button type="button" data-view="activity"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18H5Z M8 7h8 M8 12h8 M8 17h5" /></svg><span>Activity</span></button>
+  </nav>
+  <script src="app.js"></script>
+</body>
+</html>
