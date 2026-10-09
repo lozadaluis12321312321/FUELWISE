@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FuelWise — The offline AI that knows where to fill up</title>
+  <meta name="description" content="FuelWise is an offline-first AI fuel tracker. When your tank runs low it weighs the near-but-pricey station against the far-but-cheaper one and tells you which actually saves money." />
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="brand" href="#top">
+      <img src="logo.svg" alt="" width="34" height="34" />
+      <span>FuelWise</span>
+    </a>
+    <nav>
+      <a href="#problem">Problem</a>
+      <a href="#how">How it works</a>
+      <a href="#demo">Try the brain</a>
+      <a href="#offline">Offline</a>
+    </nav>
+    <a class="btn btn-ghost" href="#waitlist">Get early access</a>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Offline-first · AI-decided · Zero accounts</p>
+        <h1>
+          Low on gas.<br />
+          <span class="outline">Two stations.</span><br />
+          One right answer.
+        </h1>
+        <p class="lede">
+          The nearest pump is expensive. The cheap one is miles away — and you'll burn fuel getting there.
+          FuelWise runs the math in your pocket, without a signal, and tells you where filling up
+          <em>actually</em> costs less.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-solid" href="#demo">Watch it decide</a>
+          <a class="btn btn-ghost" href="#how">How it works</a>
+        </div>
+        <ul class="hero-stats">
+          <li><strong>0 KB</strong><span>sent to the cloud</span></li>
+          <li><strong>&lt; 10 ms</strong><span>to a decision</span></li>
+          <li><strong>100%</strong><span>works in a dead zone</span></li>
+        </ul>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="ps-top">
+              <span class="ps-dot"></span><span>FuelWise · offline</span>
+            </div>
+            <div class="gauge">
+              <svg viewBox="0 0 200 120">
+                <path class="gauge-track" d="M20 110 A80 80 0 0 1 180 110" />
+                <path class="gauge-fill" d="M20 110 A80 80 0 0 1 180 110" />
+                <line class="gauge-needle" x1="100" y1="110" x2="100" y2="40" />
+                <circle cx="100" cy="110" r="5" fill="currentColor" />
+              </svg>
+              <div class="gauge-label"><span>TANK</span><strong>11%</strong></div>
+            </div>
+            <div class="ps-cards">
+              <div class="ps-card">
+                <small>NEAR · SHELL</small>
+                <b>1.2 km</b>
+                <i>₱68.50 / L</i>
+              </div>
+              <div class="ps-vs">vs</div>
+              <div class="ps-card">
+                <small>FAR · PETRON</small>
+                <b>14.6 km</b>
+                <i>₱62.90 / L</i>
+              </div>
+            </div>
+            <div class="ps-verdict">
+              <span class="ps-pulse"></span>
+              <div>
+                <small>AI VERDICT</small>
+                <strong>Drive to Petron, Makati</strong>
+                <em>saves ₱118 net of detour fuel</em>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="orbit orbit-a"></div>
+        <div class="orbit orbit-b"></div>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>NEAR BUT PRICEY</span><span>◆</span><span>FAR BUT CHEAP</span><span>◆</span><span>AI DECIDES</span><span>◆</span><span>NO SIGNAL NEEDED</span><span>◆</span>
+        <span>NEAR BUT PRICEY</span><span>◆</span><span>FAR BUT CHEAP</span><span>◆</span><span>AI DECIDES</span><span>◆</span><span>NO SIGNAL NEEDED</span><span>◆</span>
+      </div>
+    </div>
+
+    <!-- PROBLEM -->
+    <section class="section" id="problem">
+      <div class="section-head">
+        <span class="num">01</span>
+        <h2>The low-fuel dilemma, every single week.</h2>
+      </div>
+      <div class="dilemma">
+        <article class="dilemma-card">
+          <span class="tag">OPTION A</span>
+          <h3>The one around the corner</h3>
+          <p>Close. Convenient. Charges a premium because it can. You pay for the location, not the fuel.</p>
+          <div class="meter"><span style="--w:25%"></span><label>Distance</label></div>
+          <div class="meter"><span style="--w:85%"></span><label>Price</label></div>
+        </article>
+        <div class="dilemma-mid">
+          <span class="q">?</span>
+          <p>Your gut guesses.<br />FuelWise calculates.</p>
+        </div>
+        <article class="dilemma-card">
+          <span class="tag">OPTION B</span>
+          <h3>The cheap one across town</h3>
+          <p>Noticeably cheaper per litre. But the detour burns fuel, and your tank is already on fumes.</p>
+          <div class="meter"><span style="--w:80%"></span><label>Distance</label></div>
+          <div class="meter"><span style="--w:35%"></span><label>Price</label></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- HOW -->
+    <section class="section section-dark" id="how">
+      <div class="section-head">
+        <span class="num">02</span>
+        <h2>How the brain decides.</h2>
+      </div>
+      <ol class="steps">
+        <li>
+          <span class="step-n">1</span>
+          <h3>Tracks your tank</h3>
+          <p>You log fill-ups and odometer readings. FuelWise learns your real consumption — not the brochure number.</p>
+        </li>
+        <li>
+          <span class="step-n">2</span>
+          <h3>Watches for "low"</h3>
+          <p>When your estimated range dips under your threshold, the decision engine wakes up. No tap required.</p>
+        </li>
+        <li>
+          <span class="step-n">3</span>
+          <h3>Scores every station</h3>
+          <p>For each saved station: fuel price × litres needed, <em>plus</em> the fuel cost of the detour, <em>plus</em> the value of your time.</p>
+        </li>
+        <li>
+          <span class="step-n">4</span>
+          <h3>Picks the true winner</h3>
+          <p>One recommendation, one reason, in plain language. Can't reach the far one safely? It tells you that too.</p>
+        </li>
+      </ol>
+      <div class="formula">
+        <code>
+          true_cost = (price × litres) + (detour_km ÷ efficiency × price) + (detour_min × your_hourly_value)
+        </code>
+        <p>The whole model fits in a few kilobytes. That's why it runs with airplane mode on.</p>
+      </div>
+    </section>
+
+    <!-- DEMO -->
+    <section class="section" id="demo">
+      <div class="section-head">
+        <span class="num">03</span>
+        <h2>Try the brain. Right here, right now.</h2>
+        <p class="sub">Drag the sliders. The verdict updates live — this is the same logic the app ships with.</p>
+      </div>
+
+      <div class="demo">
+        <div class="demo-controls">
+          <fieldset>
+            <legend>Your car</legend>
+            <label>Litres you need to buy <output id="o-litres">40</output> L
+              <input type="range" id="litres" min="10" max="80" value="40" />
+            </label>
+            <label>Fuel efficiency <output id="o-eff">8.0</output> L/100km
+              <input type="range" id="eff" min="4" max="16" step="0.5" value="8" />
+            </label>
+            <label>Range left on tank <output id="o-range">22</output> km
+              <input type="range" id="range" min="5" max="80" value="22" />
+            </label>
+            <label>Your time is worth <output id="o-time">150</output> ₱/h
+              <input type="range" id="time" min="0" max="600" step="25" value="150" />
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Station A · Near</legend>
+            <label>Brand
+              <select id="ba" class="brand-select">
+                <option>Shell</option><option>Petron</option><option>Caltex</option>
+                <option>Phoenix</option><option>Seaoil</option><option>Unioil</option><option>Cleanfuel</option>
+              </select>
+            </label>
+            <label>Distance <output id="o-da">1.5</output> km
+              <input type="range" id="da" min="0.2" max="30" step="0.1" value="1.5" />
+            </label>
+            <label>Price <output id="o-pa">68.50</output> ₱/L
+              <input type="range" id="pa" min="50" max="90" step="0.10" value="68.50" />
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Station B · Far</legend>
+            <label>Brand
+              <select id="bb" class="brand-select">
+                <option>Petron</option><option>Shell</option><option>Caltex</option>
+                <option>Phoenix</option><option>Seaoil</option><option>Unioil</option><option>Cleanfuel</option>
+              </select>
+            </label>
+            <label>Distance <output id="o-db">14</output> km
+              <input type="range" id="db" min="0.2" max="60" step="0.1" value="14" />
+            </label>
+            <label>Price <output id="o-pb">62.90</output> ₱/L
+              <input type="range" id="pb" min="50" max="90" step="0.10" value="62.90" />
+            </label>
+          </fieldset>
+        </div>
+
+        <div class="demo-output">
+          <div class="map" aria-hidden="true">
+            <div class="map-hud">
+              <span class="hud-dot"></span><span>METRO MANILA · OFFLINE TILES</span>
+              <span class="hud-right" id="hud-time">14:02</span>
+            </div>
+            <svg viewBox="0 0 480 320" id="map-svg">
+              <defs>
+                <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+                  <path d="M24 0H0V24" fill="none" stroke="currentColor" stroke-opacity=".07" />
+                </pattern>
+                <pattern id="water" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(-15)">
+                  <path d="M0 7 Q3.5 3 7 7 T14 7" fill="none" stroke="currentColor" stroke-opacity=".22" stroke-width="1" />
+                </pattern>
+                <radialGradient id="sweep">
+                  <stop offset="0" stop-color="currentColor" stop-opacity=".45" />
+                  <stop offset="1" stop-color="currentColor" stop-opacity="0" />
+                </radialGradient>
+                <clipPath id="mapclip"><rect width="480" height="320" rx="0" /></clipPath>
+              </defs>
+
+              <g clip-path="url(#mapclip)">
+                <!-- land -->
+                <rect width="480" height="320" fill="url(#grid)" />
+
+                <!-- Manila Bay -->
+                <g class="bay">
+                  <path class="bay-fill" d="M0 0H112C92 60 68 120 94 180C112 232 82 282 60 320H0Z" />
+                  <path class="bay-waves" d="M0 0H112C92 60 68 120 94 180C112 232 82 282 60 320H0Z" fill="url(#water)" />
+                  <path class="coast" d="M112 0C92 60 68 120 94 180C112 232 82 282 60 320" />
+                  <text class="water-label" transform="translate(38 200) rotate(-78)">MANILA BAY</text>
+                </g>
+
+                <!-- Pasig River -->
+                <path class="river" d="M96 128C150 112 196 150 248 136S342 100 400 122S460 152 480 142" />
+                <path class="river-flow" d="M96 128C150 112 196 150 248 136S342 100 400 122S460 152 480 142" />
+                <text class="road-label" transform="translate(262 128) rotate(-6)">PASIG RIVER</text>
+
+                <!-- roads -->
+                <g class="roads">
+                  <path d="M126 0C106 60 84 122 110 182C128 232 100 282 78 320" class="road road-major" />  <!-- Roxas Blvd -->
+                  <path d="M160 0L150 60 140 130 150 200 165 320" class="road road-major" />                <!-- Taft Ave -->
+                  <path d="M250 0C262 80 300 150 340 200S420 290 440 320" class="road road-major" />        <!-- EDSA -->
+                  <path d="M0 0" class="road" />
+                  <path d="M150 232L250 224 360 214 470 208" class="road" />                                <!-- Gil Puyat -->
+                  <path d="M118 184L220 180 300 176" class="road" />                                        <!-- Quirino -->
+                  <path d="M140 70L240 62 320 56" class="road" />                                           <!-- UN Ave -->
+                  <path d="M198 0L212 100 228 200 250 320" class="road" />                                  <!-- Osmeña / SLEX -->
+                  <path d="M300 60L380 40 480 30" class="road" />
+                  <path d="M330 260L420 240 480 236" class="road" />                                        <!-- Ayala -->
+                  <path d="M380 90L400 160 388 250" class="road" />                                          <!-- Makati Ave -->
+                  <path d="M0 0" class="road" />
+                  <text class="road-label" transform="translate(99 110) rotate(-72)">ROXAS BLVD</text>
+                  <text class="road-label" transform="translate(154 175) rotate(84)">TAFT AVE</text>
+                  <text class="road-label" transform="translate(310 160) rotate(52)">EDSA</text>
+                  <text class="road-label" transform="translate(290 220) rotate(-5)">GIL PUYAT</text>
+                  <text class="road-label" transform="translate(234 215) rotate(78)">SLEX</text>
+                </g>
+
+                <!-- districts -->
+                <g class="districts">
+                  <text x="180" y="40">ERMITA</text>
+                  <text x="140" y="110">MALATE</text>
+                  <text x="120" y="258">PASAY</text>
+                  <text x="396" y="60">SAN JUAN</text>
+                  <text x="330" y="98">MANDALUYONG</text>
+                  <text x="396" y="206">MAKATI</text>
+                  <text x="280" y="290">TAGUIG</text>
+                  <text x="230" y="170">PACO</text>
+                </g>
+
+                <!-- landmarks -->
+                <g class="landmarks">
+                  <rect x="166" y="22" width="18" height="18" rx="2" /><text x="188" y="34">INTRAMUROS</text>
+                  <circle cx="128" cy="146" r="3" /><text x="134" y="149">RIZAL PARK</text>
+                  <circle cx="60" cy="300" r="3" /><text x="66" y="303">MOA</text>
+                </g>
+
+                <!-- other stations (no price logged) -->
+                <g class="ghost-stations">
+                  <g transform="translate(300 262)"><circle r="4" /><text y="-7" text-anchor="middle">CALTEX</text></g>
+                  <g transform="translate(224 84)"><circle r="4" /><text y="-7" text-anchor="middle">SEAOIL</text></g>
+                  <g transform="translate(410 300)"><circle r="4" /><text y="-7" text-anchor="middle">PHOENIX</text></g>
+                </g>
+
+                <!-- routes (full roads; drawn portion is set by JS) -->
+                <path id="route-a" class="route" pathLength="100" d="M175 215L168 180 160 130 158 95 152 55 150 20" />
+                <path id="route-b" class="route" pathLength="100" d="M175 215L220 212 300 205 360 198 380 170 395 130 410 90 425 50" />
+                <path id="route-a-trail" class="route-trail" pathLength="100" d="M175 215L168 180 160 130 158 95 152 55 150 20" />
+                <path id="route-b-trail" class="route-trail" pathLength="100" d="M175 215L220 212 300 205 360 198 380 170 395 130 410 90 425 50" />
+
+                <!-- you -->
+                <g id="pin-you" transform="translate(175 215)">
+                  <circle r="40" fill="url(#sweep)" class="sweep-glow" />
+                  <path class="sweep" d="M0 0L0 -44A44 44 0 0 1 31 -31Z" />
+                  <circle r="16" class="ring" /><circle r="16" class="ring ring-2" />
+                  <circle r="6" class="you-dot" />
+                  <g class="you-tag" transform="translate(0 30)">
+                    <rect x="-22" y="-9" width="44" height="18" rx="9" />
+                    <text y="4" text-anchor="middle">YOU</text>
+                  </g>
+                </g>
+
+                <!-- station pins -->
+                <g id="pin-a" class="station" transform="translate(168 180)">
+                  <circle r="14" class="pin-halo" />
+                  <path class="pin" d="M0 -22c-7 0-12 5-12 12 0 9 12 22 12 22s12-13 12-22c0-7-5-12-12-12z" />
+                  <circle cy="-10" r="4" class="pin-eye" />
+                  <g class="pin-label" transform="translate(0 -32)">
+                    <rect x="-34" y="-10" width="68" height="20" rx="10" />
+                    <text y="4" text-anchor="middle"><tspan class="pin-letter">A</tspan> <tspan id="lbl-a">SHELL</tspan></text>
+                  </g>
+                </g>
+                <g id="pin-b" class="station" transform="translate(425 50)">
+                  <circle r="14" class="pin-halo" />
+                  <path class="pin" d="M0 -22c-7 0-12 5-12 12 0 9 12 22 12 22s12-13 12-22c0-7-5-12-12-12z" />
+                  <circle cy="-10" r="4" class="pin-eye" />
+                  <g class="pin-label" transform="translate(0 -32)">
+                    <rect x="-34" y="-10" width="68" height="20" rx="10" />
+                    <text y="4" text-anchor="middle"><tspan class="pin-letter">B</tspan> <tspan id="lbl-b">PETRON</tspan></text>
+                  </g>
+                </g>
+
+                <!-- the car -->
+                <g id="car" transform="translate(175 215)">
+                  <rect x="-7" y="-4" width="14" height="8" rx="2.5" class="car-body" />
+                  <rect x="-3" y="-3" width="5" height="6" rx="1" class="car-glass" />
+                  <circle cx="7" cy="0" r="2" class="car-light" />
+                </g>
+
+                <!-- jeepney ambience -->
+                <g class="jeep jeep-1"><rect x="-6" y="-3" width="12" height="6" rx="1.5" /></g>
+                <g class="jeep jeep-2"><rect x="-6" y="-3" width="12" height="6" rx="1.5" /></g>
+              </g>
+
+              <!-- hud -->
+              <g class="compass" transform="translate(448 292)">
+                <circle r="16" /><path d="M0 -12L4 0 0 12 -4 0Z" /><text y="-20" text-anchor="middle">N</text>
+              </g>
+              <g class="scalebar" transform="translate(16 300)">
+                <path d="M0 0H60M0 -4V4M60 -4V4" /><text x="30" y="-7" text-anchor="middle">2 KM</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="verdict" id="verdict">
+            <small>AI VERDICT</small>
+            <strong id="v-title">Drive to Station B</strong>
+            <p id="v-why">—</p>
+          </div>
+
+          <div class="breakdown">
+            <div class="bk" id="bk-a">
+              <header><span><b class="bk-brand" id="bkb-a">Shell</b> · A · Near</span><b id="t-a">₱0.00</b></header>
+              <ul>
+                <li>Fuel <span id="f-a"></span></li>
+                <li>Detour fuel <span id="d-a"></span></li>
+                <li>Time <span id="m-a"></span></li>
+              </ul>
+            </div>
+            <div class="bk" id="bk-b">
+              <header><span><b class="bk-brand" id="bkb-b">Petron</b> · B · Far</span><b id="t-b">₱0.00</b></header>
+              <ul>
+                <li>Fuel <span id="f-b"></span></li>
+                <li>Detour fuel <span id="d-b"></span></li>
+                <li>Time <span id="m-b"></span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OFFLINE -->
+    <section class="section section-dark" id="offline">
+      <div class="section-head">
+        <span class="num">04</span>
+        <h2>Built for the places where the signal dies.</h2>
+      </div>
+      <div class="features">
+        <article>
+          <div class="icon">⌁</div>
+          <h3>On-device AI</h3>
+          <p>The decision model runs locally. No API calls, no latency, no "try again later" when you're on reserve.</p>
+        </article>
+        <article>
+          <div class="icon">◎</div>
+          <h3>Your data stays yours</h3>
+          <p>Fill-ups, routes, stations — all stored on your phone. Export a backup file whenever you like. No account, ever.</p>
+        </article>
+        <article>
+          <div class="icon">▣</div>
+          <h3>Learns your habits</h3>
+          <p>Stations you actually visit, the routes you actually drive. Recommendations get sharper every tank.</p>
+        </article>
+        <article>
+          <div class="icon">◐</div>
+          <h3>Monochrome by design</h3>
+          <p>Glanceable at 110 km/h, readable in direct sun, kind to your battery. Light and dark, nothing in between.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- WAITLIST -->
+    <section class="section waitlist" id="waitlist">
+      <div class="waitlist-inner">
+        <h2>Stop guessing at the pump.</h2>
+        <p>We're building FuelWise now. Leave your email and be first in line when the beta opens.</p>
+        <form id="wl-form" onsubmit="return false">
+          <input type="email" placeholder="you@example.com" required aria-label="Email" />
+          <button class="btn btn-solid" type="submit">Join the waitlist</button>
+        </form>
+        <p class="tiny" id="wl-msg">No spam. One email when we launch.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="brand"><img src="logo.svg" alt="" width="24" height="24" /><span>FuelWise</span></div>
+    <p>© <span id="year"></span> FuelWise. Offline AI fuel tracker — concept preview.</p>
+    <button class="theme-toggle" id="theme" aria-label="Toggle light/dark">◑</button>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
