@@ -338,14 +338,124 @@
     }
   }
 
+  /* ---------------- Local AI narration (Ollama, optional) ---------------- */
+  // The decision above is always made by the deterministic engine. If a local
+  // Ollama server is reachable, we only use it to explain that decision and to
+  // answer questions about it. Nothing leaves the device; if Ollama is absent
+  // the feature hides itself and the built-in explanation is used.
+
+  const OLLAMA = "http://127.0.0.1:11434";
+  const PREFERRED_MODELS = ["gemma4:12b", "gemma4", "gemma3", "llama3", "qwen"];
+  const assistant = { model: null, abort: null, lastAnalysis: null };
+  const assistantEl = $("#assistant");
+
+  async function detectOllama() {
+    try {
+      const res = await fetch(`${OLLAMA}/api/tags`, { signal: AbortSignal.timeout(1500) });
+      const names = (await res.json()).models?.map((m) => m.name) || [];
+      assistant.model = PREFERRED_MODELS.flatMap((p) => names.filter((n) => n.startsWith(p)))[0] || names[0] || null;
+    } catch { assistant.model = null; }
+    assistantEl.classList.toggle("hidden", !assistant.model);
+    $("#assistantStatus").textContent = assistant.model ? `Local AI · ${assistant.model} · on this device` : "";
+    $("#aiHint").textContent = assistant.model
+      ? "The pick itself is an on-device calculation; the local model only puts it into words. Estimates depend on your entered prices, road distances, and efficiency."
+      : "The recommendation is an on-device calculation. Estimates depend on your entered prices, road distances, and efficiency.";
+  }
+
+  function decisionContext(a) {
+    const v = state.vehicle;
+    const row = (r) => ({
+      name: r.name, price_per_L: r.price, distance_km: r.distance, reachable: r.reachable,
+      fuel_cost: +r.fuelCost.toFixed(2), detour_fuel_cost: +r.tripCost.toFixed(2), time_cost: +r.timeCost.toFixed(2),
+      true_cost: +r.trueCost.toFixed(2), arrival_fuel_L: +r.arrival.toFixed(1), cuts_into_reserve: r.risk > 0,
+    });
+    return {
+      currency: v.currency,
+      vehicle: { fuel_left_L: v.fuel, tank_L: v.tank, efficiency_km_per_L: v.eff, range_km: +(v.fuel * v.eff).toFixed(1), reserve_L: +a.reserveL.toFixed(1), litres_to_buy: +a.baseLiters.toFixed(1), counts_return_trip: v.returnTrip, time_value_per_hour: v.timeValue },
+      recommended: a.best ? row(a.best) : null,
+      nearest: a.nearest ? row(a.nearest) : null,
+      cheapest_per_litre: a.cheapest ? row(a.cheapest) : null,
+      all_stations_ranked: a.ranked.map(row),
+      unreachable: a.results.filter((r) => !r.reachable).map(row),
+    };
+  }
+
+  const SYSTEM_PROMPT = `You are FuelWise, a fuel-stop advisor running fully offline on the user's device.
+A deterministic engine has ALREADY chosen the best station using true cost = fuel bought + fuel burned on the detour + value of time.
+Your job is only to explain that decision or answer questions about it.
+Rules: use ONLY the numbers in the JSON; never invent prices, distances or stations; never recompute or contradict the engine's pick; keep the currency symbol given; be concrete, friendly and brief (2-4 short sentences, no headings, no markdown, no bullet lists).`;
+
+  async function askAssistant(question, label) {
+    if (!assistant.model) return;
+    assistant.abort?.abort();
+    const ctrl = assistant.abort = new AbortController();
+    const out = $("#assistantOut");
+    assistantEl.classList.add("busy");
+    out.innerHTML = (label ? `<span class="q">${esc(label)}</span>` : "") + `<span class="cursor"></span>`;
+    const text = document.createTextNode("");
+    out.insertBefore(text, out.querySelector(".cursor"));
+    try {
+      const res = await fetch(`${OLLAMA}/api/chat`, {
+        method: "POST", signal: ctrl.signal,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: assistant.model, stream: true, keep_alive: "10m", options: { temperature: 0.3, num_predict: 220 },
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: `Decision data:\n${JSON.stringify(decisionContext(assistant.lastAnalysis))}\n\n${question}` },
+          ],
+        }),
+      });
+      if (!res.ok) throw new Error(`Ollama ${res.status}`);
+      const reader = res.body.getReader();
+      const dec = new TextDecoder();
+      let buf = "";
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        const lines = buf.split("\n"); buf = lines.pop();
+        for (const line of lines) {
+          if (!line.trim()) continue;
+          const msg = JSON.parse(line);
+          if (msg.message?.content) text.data += msg.message.content;
+          if (msg.error) throw new Error(msg.error);
+        }
+      }
+      text.data = text.data.trim();
+    } catch (err) {
+      if (err.name !== "AbortError") text.data = text.data || "The local model didn't answer. The built-in explanation under \"Why this station?\" still applies.";
+    } finally {
+      if (assistant.abort === ctrl) { assistantEl.classList.remove("busy"); out.querySelector(".cursor")?.remove(); }
+    }
+  }
+
+  $("#assistantExplain").addEventListener("click", () => {
+    const a = assistant.lastAnalysis;
+    const q = a?.best
+      ? `Explain to the driver, in plain words, why ${a.best.name} is the best place to fill up right now and what the trade-off was.`
+      : "Explain to the driver, in plain words, why no station is safely reachable and what they should do.";
+    askAssistant(q, "Why this pick?");
+  });
+  $("#assistantForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const input = e.target.elements.q;
+    const q = input.value.trim();
+    if (!q) return;
+    askAssistant(q, q);
+    input.value = "";
+  });
+
   function render() {
     const a = analyze();
+    assistant.lastAnalysis = a;
     renderVehicle();
     renderRecommendation(a);
     renderStations(a);
     renderChart(a);
     renderLog();
   }
+  detectOllama();
 
   /* ---------------- Events ---------------- */
 

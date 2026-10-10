@@ -118,6 +118,19 @@ button:focus-visible, .file-btn:focus-within, summary:focus-visible { outline: 2
 .stat { min-width: 0; }
 .stat b { display: block; margin-top: 6px; font-size: 19px; font-weight: 550; letter-spacing: -.5px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .stat span { display: block; font-size: 10px; color: var(--muted); }
+/* Local AI assistant (Ollama) */
+.assistant { border-top: 1px solid var(--border); padding-top: 14px; margin-top: 14px; }
+.assistant-head { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); }
+.assistant-head .btn { margin-left: auto; }
+.assistant-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text); animation: assistant-pulse 1.8s infinite; }
+.assistant.busy .assistant-dot { animation-duration: .6s; }
+@keyframes assistant-pulse { 50% { opacity: .2; } }
+.assistant-out { font-size: 13px; line-height: 1.7; margin: 12px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.assistant-out:empty { display: none; }
+.assistant-out .q { display: block; color: var(--muted); font-size: 11px; margin-bottom: 4px; }
+.assistant-out .cursor { display: inline-block; width: 7px; height: 13px; vertical-align: -2px; background: var(--text); animation: assistant-pulse .8s infinite; }
+.assistant-form { display: flex; gap: 8px; margin-top: 12px; }
+.assistant-form input { flex: 1; min-width: 0; }
 .reason-details { border-top: 1px solid var(--border); padding-top: 14px; }
 .reason-details summary { cursor: pointer; font-size: 12px; font-weight: 500; min-height: 30px; }
 .reasons { margin: 12px 0 0; padding-left: 16px; font-size: 12px; line-height: 1.8; }

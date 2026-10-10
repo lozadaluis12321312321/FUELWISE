@@ -69,7 +69,19 @@
       <section class="card ai-card" id="aiCard" data-screen="overview">
         <p class="eyebrow">YOUR COST ADVISOR</p><h2>Recommended stop</h2>
         <div id="recommendation" class="recommendation"></div>
-        <p class="hint">An on-device calculation, not a trained AI model. Estimates depend on your entered prices, road distances, and efficiency.</p>
+        <div id="assistant" class="assistant hidden">
+          <div class="assistant-head">
+            <span class="assistant-dot" aria-hidden="true"></span>
+            <span id="assistantStatus">Local AI</span>
+            <button class="btn small ghost" id="assistantExplain" type="button">Explain in plain words</button>
+          </div>
+          <div id="assistantOut" class="assistant-out" aria-live="polite"></div>
+          <form id="assistantForm" class="assistant-form">
+            <input type="text" name="q" placeholder="Ask about this decision..." maxlength="300" autocomplete="off" />
+            <button class="btn small primary" type="submit">Ask</button>
+          </form>
+        </div>
+        <p class="hint" id="aiHint">The recommendation is an on-device calculation. Estimates depend on your entered prices, road distances, and efficiency.</p>
       </section>
 
       <section class="card hidden" id="stationsCard" data-screen="stations">
