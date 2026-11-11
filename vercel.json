@@ -1,6 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "cleanUrls": true,
   "headers": [
     {
       "source": "/sw.js",
@@ -34,9 +33,12 @@
       "destination": "/fuel-tracker/index.html"
     },
     {
+      "source": "/index.html",
+      "destination": "/fuel-tracker/index.html"
+    },
+    {
       "source": "/:path*",
       "destination": "/fuel-tracker/:path*"
     }
   ]
 }
-
