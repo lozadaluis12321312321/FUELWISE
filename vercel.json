@@ -1,0 +1,42 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/fuel-tracker/:path*",
+      "destination": "/fuel-tracker/:path*"
+    },
+    {
+      "source": "/fuelwise-site/:path*",
+      "destination": "/fuelwise-site/:path*"
+    },
+    {
+      "source": "/fuel-tracker",
+      "destination": "/fuel-tracker/index.html"
+    },
+    {
+      "source": "/fuelwise-site",
+      "destination": "/fuelwise-site/index.html"
+    },
+    {
+      "source": "/",
+      "destination": "/fuel-tracker/index.html"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/fuel-tracker/:path*"
+    }
+  ]
+}
+
