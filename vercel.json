@@ -9,6 +9,15 @@
           "value": "/"
         }
       ]
+    },
+    {
+      "source": "/fuel-tracker/sw.js",
+      "headers": [
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
+      ]
     }
   ],
   "rewrites": [
@@ -17,12 +26,20 @@
       "destination": "/fuel-tracker/:path*"
     },
     {
-      "source": "/fuelwise-site/:path*",
-      "destination": "/fuelwise-site/:path*"
-    },
-    {
       "source": "/fuel-tracker",
       "destination": "/fuel-tracker/index.html"
+    },
+    {
+      "source": "/app/:path*",
+      "destination": "/fuel-tracker/:path*"
+    },
+    {
+      "source": "/app",
+      "destination": "/fuel-tracker/index.html"
+    },
+    {
+      "source": "/fuelwise-site/:path*",
+      "destination": "/fuelwise-site/:path*"
     },
     {
       "source": "/fuelwise-site",
@@ -30,15 +47,15 @@
     },
     {
       "source": "/",
-      "destination": "/fuel-tracker/index.html"
+      "destination": "/fuelwise-site/index.html"
     },
     {
       "source": "/index.html",
-      "destination": "/fuel-tracker/index.html"
+      "destination": "/fuelwise-site/index.html"
     },
     {
       "source": "/:path*",
-      "destination": "/fuel-tracker/:path*"
+      "destination": "/fuelwise-site/:path*"
     }
   ]
 }
