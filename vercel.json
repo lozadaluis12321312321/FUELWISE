@@ -30,6 +30,10 @@
       "destination": "/fuel-tracker/index.html"
     },
     {
+      "source": "/fuel-tracker/",
+      "destination": "/fuel-tracker/index.html"
+    },
+    {
       "source": "/app/:path*",
       "destination": "/fuel-tracker/:path*"
     },
@@ -38,11 +42,19 @@
       "destination": "/fuel-tracker/index.html"
     },
     {
+      "source": "/app/",
+      "destination": "/fuel-tracker/index.html"
+    },
+    {
       "source": "/fuelwise-site/:path*",
       "destination": "/fuelwise-site/:path*"
     },
     {
       "source": "/fuelwise-site",
+      "destination": "/fuelwise-site/index.html"
+    },
+    {
+      "source": "/fuelwise-site/",
       "destination": "/fuelwise-site/index.html"
     },
     {
